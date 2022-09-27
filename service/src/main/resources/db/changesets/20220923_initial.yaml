@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: initial
+      author: ishaghag
+      changes:
+        - createTable:
+            tableName: user_profile
+            columns:
+              - column:
+                  name: user_id
+                  type: text
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: A persistent user ID retrieved from SAM
+              - column:
+                  name: profile_obj
+                  type: jsonb
+                  constraints:
+                    nullable: false
+                  remarks: Object storing the profile data

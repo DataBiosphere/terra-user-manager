@@ -1,0 +1,4 @@
+rootProject.name = 'terra-user-manager'
+include('service', 'client', 'integration', 'scripts')
+
+gradle.ext.releaseVersion = '0.1.0'
