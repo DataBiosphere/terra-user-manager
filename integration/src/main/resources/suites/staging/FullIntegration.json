@@ -1,7 +1,7 @@
 {
   "name": "FullIntegration",
   "description": "All staging tests",
-  "serverSpecificationFile": "tps-staging.json",
+  "serverSpecificationFile": "user-staging.json",
   "testConfigurationFiles": [
     "integration/GetStatus.json",
     "integration/GetVersion.json"

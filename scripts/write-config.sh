@@ -50,8 +50,8 @@ Usage: $0 [<target>] [<vaulttoken>] [<outputdir>] [<vaultenv>]"
     help or ? - print this help
     clean - removes all files from the output directory
     * - anything else is assumed to be a personal environment using the terra-kernel-k8s
-  If <target> is not specified, then use the envvar TPS_WRITE_CONFIG
-  If TPS_WRITE_CONFIG is not specified, then use local
+  If <target> is not specified, then use the envvar USER_WRITE_CONFIG
+  If USER_WRITE_CONFIG is not specified, then use local
 
   <vaulttoken> defaults to the token found in ~/.vault-token.
 
@@ -61,8 +61,8 @@ Usage: $0 [<target>] [<vaulttoken>] [<outputdir>] [<vaultenv>]"
   <vaultenv> can be:
     docker - run a docker image containing vault
     local  - run the vault installed locally
-  If <vaultenv> is not specified, then use the envvar TPS_VAULT_ENV
-  If TPS_VAULT_ENV is not specified, then we use docker
+  If <vaultenv> is not specified, then use the envvar USER_VAULT_ENV
+  If USER_VAULT_ENV is not specified, then we use docker
 EOF
  exit 1
 }
@@ -70,11 +70,11 @@ EOF
 # Get the inputs with defaulting
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null  && pwd )"
 default_outputdir="${script_dir}/config"
-default_target=${TPS_WRITE_CONFIG:-local}
+default_target=${USER_WRITE_CONFIG:-local}
 target=${1:-$default_target}
 vaulttoken=${2:-$(cat "$HOME"/.vault-token)}
 outputdir=${3:-$default_outputdir}
-default_vaultenv=${TPS_VAULT_ENV:-docker}
+default_vaultenv=${USER_VAULT_ENV:-docker}
 vaultenv=${4:-$default_vaultenv}
 
 # The vault paths are irregular, so we map the target into three variables:
@@ -196,7 +196,7 @@ function vaultgetdb {
 vaultget "secret/dsde/firecloud/${fcenv}/common/firecloud-account.json" "${outputdir}/user-delegated-sa.json"
 
 ## TODO: Eventually, we will need an SA
-##vaultgetb64 "secret/dsde/terra/kernel/${k8senv}/${namespace}/tps/app-sa" "${outputdir}/tps-sa.json"
+##vaultgetb64 "secret/dsde/terra/kernel/${k8senv}/${namespace}/user/app-sa" "${outputdir}/user-sa.json"
 
 # Test Runner SA
 vaultgetb64 "secret/dsde/terra/kernel/integration/common/testrunner/testrunner-sa" "${outputdir}/testrunner-sa.json"
@@ -228,9 +228,9 @@ fi
 #    note: some instances do not have the full name, project, region. We default to the integration k8s values
 # 3. Get the database information (user, pw, name) for db and stairway db
 # TODO: postgres setup
-#vaultgetb64 "secret/dsde/terra/kernel/${k8senv}/${namespace}/tps/sqlproxy-sa" "${outputdir}/sqlproxy-sa.json"
+#vaultgetb64 "secret/dsde/terra/kernel/${k8senv}/${namespace}/user/sqlproxy-sa" "${outputdir}/sqlproxy-sa.json"
 #tmpfile=$(mktemp)
-#vaultget "secret/dsde/terra/kernel/${k8senv}/${namespace}/tps/postgres/instance" "${tmpfile}"
+#vaultget "secret/dsde/terra/kernel/${k8senv}/${namespace}/user/postgres/instance" "${tmpfile}"
 #instancename=$(jq -r '.name' "${tmpfile}")
 #instanceproject=$(jq -r '.project' "${tmpfile}")
 #instanceregion=$(jq -r '.region' "${tmpfile}")
@@ -243,7 +243,7 @@ fi
 #echo "${instanceproject}:${instanceregion}:${instancename}" > "${outputdir}/db-connection-name.txt"
 
 # TODO: postgres setup
-# vaultgetdb "secret/dsde/terra/kernel/${k8senv}/${namespace}/tps/postgres/db-creds" "db"
+# vaultgetdb "secret/dsde/terra/kernel/${k8senv}/${namespace}/user/postgres/db-creds" "db"
 
 # We made it to the end, so record the target and avoid redos
 echo "$target" > "${outputdir}/target.txt"

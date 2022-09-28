@@ -1,7 +1,7 @@
 {
   "name": "FullIntegration",
   "description": "All integration tests",
-  "serverSpecificationFile": "tps-local.json",
+  "serverSpecificationFile": "user-local.json",
   "testConfigurationFiles": [
     "integration/GetStatus.json",
     "integration/GetVersion.json"
