@@ -14,8 +14,8 @@ databaseChangeLog:
                     nullable: false
                   remarks: A persistent user ID retrieved from SAM
               - column:
-                  name: profile_obj
+                  name: profile_object
                   type: jsonb
                   constraints:
                     nullable: false
-                  remarks: Object storing the profile data
+                  remarks: We are doing schemaless for this repo. Everything will go in user_profile.
