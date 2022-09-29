@@ -6,6 +6,7 @@ import bio.terra.testrunner.runner.config.TestUserSpecification;
 import bio.terra.user.client.ApiClient;
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.io.IOException;
 import java.util.List;
@@ -43,13 +44,9 @@ public class ClientTestUtils {
     return buildClient(null, server);
   }
 
-  // TODO: Need to add userServiceUri to the ServerSpecification in TestRunner.
-  //  Although that seems crazy to have to update TestRunner for every component.
   private static ApiClient buildClient(
       @Nullable AccessToken accessToken, ServerSpecification server) throws IOException {
-    if (Strings.isNullOrEmpty(server.workspaceManagerUri)) {
-      throw new IllegalArgumentException("User Service URI cannot be empty");
-    }
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(server.workspaceManagerUri), "User Service URI cannot be empty");
 
     ApiClient apiClient = new ApiClient();
     apiClient.setBasePath(server.workspaceManagerUri);
