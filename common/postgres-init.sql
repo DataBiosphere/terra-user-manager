@@ -1,4 +1,0 @@
-CREATE ROLE dbuser WITH LOGIN ENCRYPTED PASSWORD 'dbpwd';
-CREATE DATABASE user_db OWNER dbuser;
-\c user_db
-CREATE EXTENSION pgcrypto;
