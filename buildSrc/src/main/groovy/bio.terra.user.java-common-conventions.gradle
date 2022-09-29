@@ -69,6 +69,10 @@ spotless {
     }
 }
 
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 // Run spotless check when running in github actions, otherwise run spotless apply.
 compileJava {
     if (isCiServer) {
