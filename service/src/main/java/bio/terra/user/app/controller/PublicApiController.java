@@ -3,7 +3,6 @@ package bio.terra.user.app.controller;
 import bio.terra.user.api.PublicApi;
 import bio.terra.user.app.configuration.VersionConfiguration;
 import bio.terra.user.model.ApiVersionProperties;
-import bio.terra.user.service.status.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PublicApiController implements PublicApi {
-  private final StatusService statusService;
   private final VersionConfiguration versionConfiguration;
 
   @Autowired
-  public PublicApiController(
-      StatusService statusService, VersionConfiguration versionConfiguration) {
-    this.statusService = statusService;
+  public PublicApiController(VersionConfiguration versionConfiguration) {
     this.versionConfiguration = versionConfiguration;
   }
 
   @Override
   public ResponseEntity<Void> serviceStatus() {
-    return new ResponseEntity<>(
-        statusService.getCurrentStatus() ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @Override
