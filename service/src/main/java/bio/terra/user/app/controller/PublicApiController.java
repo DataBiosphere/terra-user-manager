@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PublicApiController implements PublicApi {
@@ -33,15 +31,5 @@ public class PublicApiController implements PublicApi {
             .github(versionConfiguration.getGithub())
             .build(versionConfiguration.getBuild());
     return new ResponseEntity<>(currentVersion, HttpStatus.OK);
-  }
-
-  @GetMapping(value = "/")
-  public String index() {
-    return "redirect:swagger-ui.html";
-  }
-
-  @GetMapping(value = "/swagger-ui.html")
-  public String getSwagger(Model model) {
-    return "index";
   }
 }
