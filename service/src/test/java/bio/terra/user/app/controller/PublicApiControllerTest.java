@@ -6,12 +6,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import bio.terra.user.app.configuration.VersionConfiguration;
-import bio.terra.user.testutils.BaseTest;
+import bio.terra.user.testutils.BaseUnitTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
-class PublicApiControllerTest extends BaseTest {
+class PublicApiControllerTest extends BaseUnitTest {
 
   @Autowired private MockMvc mockMvc;
 
