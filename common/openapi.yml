@@ -85,7 +85,7 @@ components:
             $ref: '#/components/schemas/ErrorReport'
 
     NotFound:
-      description: Not found (or unauthorized)
+      description: Not found
       content:
         application/json:
           schema:
