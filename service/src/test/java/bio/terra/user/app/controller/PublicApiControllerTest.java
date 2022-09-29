@@ -2,7 +2,6 @@ package bio.terra.user.app.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import bio.terra.user.app.configuration.VersionConfiguration;
@@ -35,11 +34,6 @@ class PublicApiControllerTest extends BaseUnitTest {
 
   @Test
   void testGetSwagger() throws Exception {
-    this.mockMvc.perform(get("/swagger-ui.html")).andExpect(status().isOk());
-  }
-
-  @Test
-  void testIndex() throws Exception {
-    this.mockMvc.perform(get("/")).andExpect(redirectedUrl("swagger-ui.html"));
+    this.mockMvc.perform(get("/")).andExpect(status().isOk());
   }
 }
