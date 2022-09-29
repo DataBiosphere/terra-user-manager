@@ -46,7 +46,8 @@ public class ClientTestUtils {
 
   private static ApiClient buildClient(
       @Nullable AccessToken accessToken, ServerSpecification server) throws IOException {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(server.workspaceManagerUri), "User Service URI cannot be empty");
+    Preconditions.checkArgument(
+        !Strings.isNullOrEmpty(server.workspaceManagerUri), "User Service URI cannot be empty");
 
     ApiClient apiClient = new ApiClient();
     apiClient.setBasePath(server.workspaceManagerUri);
