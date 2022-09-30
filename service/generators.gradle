@@ -13,7 +13,7 @@ dependencies {
 def artifactGroup = "${group}.user"
 
 generateSwaggerCode {
-    inputFile = file('../common/openapi.yml')
+    inputFile = file('../service/src/main/resources/api/openapi.yml')
     language = 'spring'
     components = ['models', 'apis']
     jvmArgs = ['--add-opens=java.base/java.util=ALL-UNNAMED']
