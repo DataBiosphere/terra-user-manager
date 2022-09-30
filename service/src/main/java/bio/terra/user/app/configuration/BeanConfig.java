@@ -18,7 +18,7 @@ public class BeanConfig {
   @Bean("jdbcTemplate")
   public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate(
       UserDatabaseConfiguration config) {
-    return new NamedParameterJdbcTemplate(config.getDataSource());
+    return new NamedParameterJdbcTemplate(config.dataSource());
   }
 
   @Bean("objectMapper")

@@ -13,10 +13,10 @@ public final class StartupInitializer {
     var databaseConfiguration = applicationContext.getBean(UserDatabaseConfiguration.class);
 
     // Migrate the database
-    if (databaseConfiguration.isInitializeOnStart()) {
-      migrateService.initialize(changelogPath, databaseConfiguration.getDataSource());
-    } else if (databaseConfiguration.isUpgradeOnStart()) {
-      migrateService.upgrade(changelogPath, databaseConfiguration.getDataSource());
+    if (databaseConfiguration.initializeOnStart()) {
+      migrateService.initialize(changelogPath, databaseConfiguration.dataSource());
+    } else if (databaseConfiguration.upgradeOnStart()) {
+      migrateService.upgrade(changelogPath, databaseConfiguration.dataSource());
     }
   }
 }
