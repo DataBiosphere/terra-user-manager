@@ -42,16 +42,28 @@ repositories {
 }
 
 dependencies {
+    constraints {
+        implementation 'com.google.guava:guava:31.1-jre' // "-jre" for Java 8 or higher
+        implementation 'org.checkerframework:checker-qual:3.21.3'
+    }
+    implementation platform('com.google.cloud:libraries-bom:25.1.0')
+
     compileOnly "com.google.code.findbugs:annotations:3.0.1"
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
     swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.31'
 
     implementation 'org.slf4j:slf4j-api:1.7.35'
 
-    testImplementation 'ch.qos.logback:logback-classic:1.2.10'
+    testImplementation 'ch.qos.logback:logback-classic:1.2.11'
     testImplementation 'org.hamcrest:hamcrest:2.2'
 
-    implementation 'bio.terra:terra-common-lib:0.0.75-SNAPSHOT'
+    implementation('bio.terra:terra-common-lib:0.0.75-SNAPSHOT') {
+        exclude group: 'org.broadinstitute.dsde.workbench', module: 'sam-client_2.12'
+    }
+
+    configurations.all {
+        exclude group: 'org.bouncycastle', module: 'bcpkix-jdk18on'
+    }
 }
 
 tasks.named('test') {
@@ -67,10 +79,6 @@ spotless {
         targetExclude "**/swagger-code/**"
         googleJavaFormat()
     }
-}
-
-dependencyLocking {
-    lockAllConfigurations()
 }
 
 // Run spotless check when running in github actions, otherwise run spotless apply.
@@ -92,6 +100,7 @@ if (hasProperty("buildScan")) {
 
 // Spotbugs configuration
 spotbugs {
+    toolVersion = '4.7.2'
     reportLevel = 'high'
     effort = 'max'
 }
@@ -103,6 +112,10 @@ spotbugsMain {
             html.enabled = true
         }
     }
+}
+
+jacoco {
+    toolVersion = "0.8.8"
 }
 
 jacocoTestReport {

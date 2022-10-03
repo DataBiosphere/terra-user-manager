@@ -27,3 +27,5 @@ dependencies {
     // Requires client library
     implementation project(':client')
 }
+
+apply from: "$rootDir/gradle/dependency-locking.gradle"
