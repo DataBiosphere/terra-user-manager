@@ -45,6 +45,7 @@ dependencies {
     constraints {
         implementation 'com.google.guava:guava:31.1-jre' // "-jre" for Java 8 or higher
         implementation 'org.checkerframework:checker-qual:3.21.3'
+        implementation 'org.ow2.asm:asm:9.3'
     }
     implementation platform('com.google.cloud:libraries-bom:25.1.0')
 
@@ -63,6 +64,10 @@ dependencies {
 
     configurations.all {
         exclude group: 'org.bouncycastle', module: 'bcpkix-jdk18on'
+    }
+
+    configurations.jacocoAnt {
+        exclude group: 'org.ow2.asm'
     }
 }
 
