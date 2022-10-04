@@ -1,0 +1,14 @@
+user:
+  sam.base-path: ${SAM_ADDRESS:https://sam.dsde-dev.broadinstitute.org}
+
+  user-database:
+    initialize-on-start: true
+    password: dbpwd
+    uri: jdbc:postgresql://127.0.0.1:5432/user_db
+    username: dbuser
+
+terra.common:
+  kubernetes:
+    in-kubernetes: false
+  tracing:
+    stackdriverExportEnabled: false
