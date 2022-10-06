@@ -74,11 +74,6 @@ jobs:
         pg_isready -h localhost -t 10
         psql -h localhost -U postgres -f ./scripts/local-postgres-init.sql
 
-    - name: auth
-      uses: google-github-actions/auth@v0
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
-
     - name: Run tests
       run: ./gradlew --build-cache :service:test --scan
     - name: Upload Test Reports
