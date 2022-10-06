@@ -31,9 +31,7 @@ jobs:
           ~/.gradle/wrapper
         key: v1-${{ runner.os }}-gradle-${{ github.ref }}-${{ github.sha }}
     - name: Gradle build service
-      run: |
-        cd terra-user-manager
-        ./gradlew --build-cache :service:build -x test
+      run: ./gradlew --build-cache :service:build -x test
 
     - name: Upload spotbugs results
       uses: github/codeql-action/upload-sarif@main
@@ -74,7 +72,6 @@ jobs:
         PGPASSWORD: postgres
       run: |
         pg_isready -h localhost -t 10
-        cd terra-user-manager
         psql -h localhost -U postgres -f ./scripts/local-postgres-init.sql
 
     - name: auth
@@ -83,15 +80,13 @@ jobs:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
     - name: Run tests
-      run: |
-        cd terra-user-manager
-        ./gradlew --build-cache :service:test --scan
+      run: ./gradlew --build-cache :service:test --scan
     - name: Upload Test Reports
       if: always()
       uses: actions/upload-artifact@v1
       with:
         name: Test Reports
-        path: ./terra-user-manager/service/build/reports/tests
+        path: ./service/build/reports/tests
     - name: Get current date
       id: date
       if: failure() && contains(github.actor, 'verily-automation-bot')
