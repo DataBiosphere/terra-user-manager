@@ -35,9 +35,56 @@ paths:
               schema:
                 $ref: '#/components/schemas/VersionProperties'
 
+  # User profile management
+  /api/profile:
+    parameters:
+      - $ref: '#/components/parameters/ProfilePath'
+    get:
+      summary: Retrieve a profile property.
+      operationId: userProfileLookup
+      tags: [ Profile ]
+      responses:
+        '200':
+          $ref: '#/components/responses/LookupResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      summary: Set a profile property.
+      operationId: userProfileSet
+      tags: [ Profile ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnyObject'
+      responses:
+        '204':
+          description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
 components:
   schemas:
     # Please keep alphabetized
+    AnyObject:
+      type: object
+      required: [value]
+      properties:
+        value: {}
+
     ErrorReport:
       type: object
       required: [message, statusCode, causes]
@@ -50,6 +97,10 @@ components:
           type: array
           items:
             type: string
+
+    LookupPath:
+      type: string
+      description: Paths are specified in dot notation. For example, "user.name.first"
 
     VersionProperties:
       type: object
@@ -68,6 +119,15 @@ components:
           type: string
           description: Version of the currently deployed app declared in build.gradle. Client and server versions are linked.
 
+  parameters:
+    ProfilePath:
+      name: path
+      in: query
+      description: Lookup path of a user profile property
+      explode: false
+      schema:
+        $ref: '#/components/schemas/LookupPath'
+
   responses:
     # Keep alphabetized please
     BadRequest:
@@ -83,6 +143,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorReport'
+
+    LookupResult:
+      description: Value of requested property
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AnyObject'
 
     NotFound:
       description: Not found
