@@ -1,20 +1,16 @@
 package bio.terra.user.app.controller;
 
 import bio.terra.common.exception.AbstractGlobalExceptionHandler;
-import bio.terra.user.model.ApiErrorReport;
+import bio.terra.user.model.ErrorReport;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends AbstractGlobalExceptionHandler<ApiErrorReport> {
+public class GlobalExceptionHandler extends AbstractGlobalExceptionHandler<ErrorReport> {
 
   @Override
-  public ApiErrorReport generateErrorReport(
-      Throwable ex, HttpStatus statusCode, List<String> causes) {
-    return new ApiErrorReport()
-        .message(ex.getMessage())
-        .statusCode(statusCode.value())
-        .causes(causes);
+  public ErrorReport generateErrorReport(Throwable ex, HttpStatus statusCode, List<String> causes) {
+    return new ErrorReport().message(ex.getMessage()).statusCode(statusCode.value()).causes(causes);
   }
 }
