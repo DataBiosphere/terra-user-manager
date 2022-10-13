@@ -57,17 +57,18 @@ class ProfileApiControllerTest extends BaseUnitTest {
   @Test
   void clobberSet() throws Exception {
     setUserProfile("starred", "{ \"value\": [\"workspace1\", \"workspace2\"] }");
-    assertUserProfile("$.value.starred", new String[] { "workspace1", "workspace2" });
+    assertUserProfile("$.value.starred[0]", "workspace1");
+    assertUserProfile("$.value.starred[1]", "workspace2");
 
     setUserProfile("starred", "{ \"value\": null }");
-    assertUserProfile(".value.starred", "");
+    assertUserProfile("$.value.starred", null);
   }
 
   private void setUserProfile(String path, String value) throws Exception {
     mockMvc
         .perform(
             put(API).param("path", path).contentType(MediaType.APPLICATION_JSON).content(value))
-        .andExpect(status().isNoContent());
+        .andExpect(status().isOk());
   }
 
   private void assertUserProfile(String jsonPath, Object value) throws Exception {

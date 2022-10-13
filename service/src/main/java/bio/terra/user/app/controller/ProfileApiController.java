@@ -30,10 +30,10 @@ public class ProfileApiController implements ProfileApi {
   }
 
   @Override
-  public ResponseEntity<Void> setUserProfile(AnyObject body, String path) {
+  public ResponseEntity<AnyObject> setUserProfile(AnyObject body, String path) {
     profileService.setProperty(getUser(), parsePath(path), body.getValue());
 
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    return getUserProfile(path);
   }
 
   @Override

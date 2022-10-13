@@ -65,8 +65,8 @@ paths:
             schema:
               $ref: '#/components/schemas/AnyObject'
       responses:
-        '204':
-          description: OK
+        '200':
+          $ref: '#/components/responses/LookupResult'
         '400':
           $ref: '#/components/responses/BadRequest'
         '403':
