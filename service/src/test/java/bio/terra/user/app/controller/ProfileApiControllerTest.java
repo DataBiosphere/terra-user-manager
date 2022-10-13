@@ -41,71 +41,40 @@ class ProfileApiControllerTest extends BaseUnitTest {
 
   @Test
   void recursiveSet() throws Exception {
-    String json = "{ \"value\": \"John\" }";
-
-    mockMvc
-        .perform(
-            put(API)
-                .param("path", "user.name.first")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-        .andExpect(status().isNoContent());
-
-    mockMvc
-        .perform(get(API))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.value.user.name.first").value("John"));
+    setUserProfile("user.name.first", "{ \"value\": \"John\" }");
+    assertUserProfile("$.value.user.name.first", "John");
   }
 
   @Test
   void setSideBySide() throws Exception {
-    String json = "{ \"value\": true }";
+    setUserProfile("settings.darkmode", "{ \"value\": true }");
+    setUserProfile("settings.language", "{ \"value\": \"en\" }");
 
-    mockMvc
-        .perform(
-            put(API)
-                .param("path", "settings.darkmode")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-        .andExpect(status().isNoContent());
-
-    String json2 = "{ \"value\": \"en\" }";
-
-    mockMvc
-        .perform(
-            put(API)
-                .param("path", "settings.language")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json2))
-        .andExpect(status().isNoContent());
-
-    mockMvc
-        .perform(get(API))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.value.settings.darkmode").value(true))
-        .andExpect(jsonPath("$.value.settings.language").value("en"));
+    assertUserProfile("$.value.settings.darkmode", true);
+    assertUserProfile("$.value.settings.language", "en");
   }
 
   @Test
-  void overwrite() throws Exception {
-    String json = "{ \"value\": {\"a\": true, \"b\": false } }";
+  void clobberSet() throws Exception {
+    setUserProfile("starred", "{ \"value\": [\"workspace1\", \"workspace2\"] }");
+    assertUserProfile("$.value.starred", new String[] { "workspace1", "workspace2" });
 
+    setUserProfile("starred", "{ \"value\": null }");
+    assertUserProfile(".value.starred", "");
+  }
+
+  private void setUserProfile(String path, String value) throws Exception {
     mockMvc
-        .perform(put(API).contentType(MediaType.APPLICATION_JSON).content(json))
+        .perform(
+            put(API).param("path", path).contentType(MediaType.APPLICATION_JSON).content(value))
         .andExpect(status().isNoContent());
+  }
 
-    String json2 = "{ }";
-
-    mockMvc
-        .perform(put(API).contentType(MediaType.APPLICATION_JSON).content(json2))
-        .andExpect(status().isNoContent());
-
+  private void assertUserProfile(String jsonPath, Object value) throws Exception {
     mockMvc
         .perform(get(API))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.value").value(""));
+        .andExpect(jsonPath(jsonPath).value(value));
   }
 }
