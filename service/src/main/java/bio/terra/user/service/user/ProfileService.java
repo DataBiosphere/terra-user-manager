@@ -4,7 +4,6 @@ import bio.terra.common.exception.InternalServerErrorException;
 import bio.terra.common.iam.SamUser;
 import bio.terra.user.db.ProfileDao;
 import bio.terra.user.service.exception.InvalidPropertyException;
-import bio.terra.user.service.exception.PropertyNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +42,7 @@ public class ProfileService {
     var userId = user.getSubjectId();
 
     var prop = profileDao.getProperty(userId, path);
-    if (prop == null) throw new PropertyNotFoundException("");
+    if (prop == null) return null;
 
     try {
       return objectMapper.readValue(prop, JsonNode.class);

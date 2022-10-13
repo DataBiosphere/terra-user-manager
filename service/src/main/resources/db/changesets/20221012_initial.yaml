@@ -18,4 +18,5 @@ databaseChangeLog:
                   type: jsonb
                   constraints:
                     nullable: false
+                  defaultValue: "{}"
                   remarks: Schemaless object storing the profile data

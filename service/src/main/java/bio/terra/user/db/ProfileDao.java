@@ -2,7 +2,6 @@ package bio.terra.user.db;
 
 import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
-import bio.terra.user.service.exception.PropertyNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -77,15 +76,13 @@ public class ProfileDao {
             return rs.getString("value");
           });
     } catch (EmptyResultDataAccessException e) {
-      throw new PropertyNotFoundException("", e);
+      return "{}";
     }
   }
 
   private void createRowIfNotExists(String userId) {
     final String sql =
-        "INSERT INTO user_profile (user_id, profile_obj) "
-            + "VALUES (:user_id, '{}') "
-            + "ON CONFLICT DO NOTHING";
+        "INSERT INTO user_profile (user_id) " + "VALUES (:user_id) " + "ON CONFLICT DO NOTHING";
 
     MapSqlParameterSource params = new MapSqlParameterSource().addValue("user_id", userId);
 

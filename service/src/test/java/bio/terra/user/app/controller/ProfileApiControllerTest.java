@@ -36,7 +36,7 @@ class ProfileApiControllerTest extends BaseUnitTest {
 
   @Test
   void getEmptyProfile() throws Exception {
-    mockMvc.perform(get(API)).andExpect(status().isNotFound());
+    assertUserProfile("$.value", "");
   }
 
   @Test
