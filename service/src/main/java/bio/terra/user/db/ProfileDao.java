@@ -39,9 +39,11 @@ public class ProfileDao {
 
   private void setPropertySingle(String userId, List<String> path, String value) {
     final String sql =
-        "UPDATE user_profile "
-            + "SET profile_obj = jsonb_set(profile_obj, :path::text[], :value::jsonb) "
-            + "WHERE user_id = :user_id";
+        """
+        UPDATE user_profile
+        SET profile_obj = jsonb_set(profile_obj, :path::text[], :value::jsonb)
+        WHERE user_id = :user_id
+        """;
 
     MapSqlParameterSource params =
         new MapSqlParameterSource()
@@ -59,9 +61,11 @@ public class ProfileDao {
 
   private String getPropertySingle(String userId, List<String> path) {
     final String sql =
-        "SELECT profile_obj #> :path::text[] AS value "
-            + "FROM user_profile "
-            + "WHERE user_id = :user_id ";
+        """
+        SELECT profile_obj #> :path::text[] AS value
+        FROM user_profile
+        WHERE user_id = :user_id
+        """;
 
     MapSqlParameterSource params =
         new MapSqlParameterSource()
@@ -82,7 +86,11 @@ public class ProfileDao {
 
   private void createRowIfNotExists(String userId) {
     final String sql =
-        "INSERT INTO user_profile (user_id) " + "VALUES (:user_id) " + "ON CONFLICT DO NOTHING";
+        """
+        INSERT INTO user_profile (user_id)
+        VALUES (:user_id)
+        ON CONFLICT DO NOTHING
+        """;
 
     MapSqlParameterSource params = new MapSqlParameterSource().addValue("user_id", userId);
 

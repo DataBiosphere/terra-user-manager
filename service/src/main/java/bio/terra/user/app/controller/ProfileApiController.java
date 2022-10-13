@@ -7,6 +7,7 @@ import bio.terra.user.service.user.ProfileService;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class ProfileApiController implements ProfileApi {
   }
 
   private List<String> parsePath(String path) {
-    if (path == null || path.length() == 0) return List.of();
+    if (StringUtils.isEmpty(path)) return List.of();
 
     return Arrays.asList(path.split("\\."));
   }
