@@ -18,6 +18,20 @@ public class ProfileDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
+  /**
+   * When attempting to set a nested property, the service will ensure the path
+   * to that property exists and is traversable. 
+   * <p>
+   * a) If any path elements are not found, then it will initialize
+   * those elements to an empty object before continuing.
+   * <p>
+   * b) If a path element exists but is not an indexible type (object or array), 
+   * then the operation will fail silently.
+   * 
+   * @param userId - Sam user ID
+   * @param path - path to potentially nested property
+   * @param value - JSON serialized value
+   */
   @WriteTransaction
   public void setProperty(String userId, List<String> path, String value) {
     createRowIfNotExists(userId);
