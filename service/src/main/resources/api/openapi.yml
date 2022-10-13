@@ -41,7 +41,7 @@ paths:
       - $ref: '#/components/parameters/ProfilePath'
     get:
       summary: Retrieve a profile property.
-      operationId: userProfileLookup
+      operationId: getUserProfile
       tags: [ Profile ]
       responses:
         '200':
@@ -56,7 +56,7 @@ paths:
           $ref: '#/components/responses/ServerError'
     put:
       summary: Set a profile property.
-      operationId: userProfileSet
+      operationId: setUserProfile
       tags: [ Profile ]
       requestBody:
         required: true

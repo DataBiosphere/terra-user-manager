@@ -29,6 +29,21 @@ public class ProfileApiController implements ProfileApi {
     this.userFactory = userFactory;
   }
 
+  @Override
+  public ResponseEntity<Void> setUserProfile(AnyObject body, String path) {
+    profileService.setProperty(getUser(), parsePath(path), body.getValue());
+
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @Override
+  public ResponseEntity<AnyObject> getUserProfile(String path) {
+    AnyObject apiObj =
+        new AnyObject().value(profileService.getProperty(getUser(), parsePath(path)));
+
+    return new ResponseEntity<>(apiObj, HttpStatus.OK);
+  }
+
   private SamUser getUser() {
     return userFactory.from(servletRequest);
   }
@@ -37,20 +52,5 @@ public class ProfileApiController implements ProfileApi {
     if (path == null || path.length() == 0) return List.of();
 
     return Arrays.asList(path.split("\\."));
-  }
-
-  @Override
-  public ResponseEntity<Void> userProfileSet(AnyObject body, String path) {
-    profileService.setProperty(getUser(), parsePath(path), body.getValue());
-
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
-
-  @Override
-  public ResponseEntity<AnyObject> userProfileLookup(String path) {
-    var obj = profileService.getProperty(getUser(), parsePath(path));
-
-    var apiObj = new AnyObject().value(obj);
-    return new ResponseEntity<>(apiObj, HttpStatus.OK);
   }
 }
