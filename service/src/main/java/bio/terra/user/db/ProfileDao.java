@@ -36,26 +36,10 @@ public class ProfileDao {
   public void setProperty(String userId, List<String> path, String value) {
     createRowIfNotExists(userId);
 
-    for (int i = 0; i < path.size() - 1; i++) {
-      var subPath = path.subList(0, i + 1);
-
-      if (!pathExists(userId, subPath)) {
-        setPropertySingle(userId, subPath, "{}");
-      }
-    }
-
-    setPropertySingle(userId, path, value);
-  }
-
-  private boolean pathExists(String userId, List<String> path) {
-    return getPropertySingle(userId, path) != null;
-  }
-
-  private void setPropertySingle(String userId, List<String> path, String value) {
     final String sql =
         """
         UPDATE user_profile
-        SET profile_obj = jsonb_set(profile_obj, :path::text[], :value::jsonb)
+        SET profile_obj = pathRecurse(profile_obj, :path::text[], :value::jsonb)
         WHERE user_id = :user_id
         """;
 
