@@ -2,8 +2,10 @@ package bio.terra.user.db;
 
 import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
+import bio.terra.user.db.exception.BadPathException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -26,7 +28,7 @@ public class ProfileDao {
    * object before continuing.
    *
    * <p>b) If a path element exists but is not an indexible type (object or array), then the
-   * operation will fail silently.
+   * operation will abort.
    *
    * @param userId - Sam user ID
    * @param path - path to potentially nested property
@@ -49,7 +51,12 @@ public class ProfileDao {
             .addValue("value", value)
             .addValue("user_id", userId);
 
-    jdbcTemplate.update(sql, params);
+    try {
+      jdbcTemplate.update(sql, params);
+    } catch (DataIntegrityViolationException e) {
+      throw new BadPathException(
+          "Access through the path " + path + " has failed: " + e.getCause().getMessage());
+    }
   }
 
   @ReadTransaction

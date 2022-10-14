@@ -4,8 +4,11 @@ DECLARE
     node text;
     child jsonb;
 BEGIN
-    IF array_length($2, 1) IS NULL OR jsonb_typeof($1) != 'object' THEN
+    IF array_length($2, 1) IS NULL THEN
         RETURN $3;
+    END IF;
+    IF jsonb_typeof($1) != 'object' THEN
+        RAISE EXCEPTION 'Attempting to index into non-object: %', $1 USING ERRCODE = 'invalid_sql_json_subscript';
     END IF;
     node = $2[1];
     IF ($1 -> node) IS NULL THEN

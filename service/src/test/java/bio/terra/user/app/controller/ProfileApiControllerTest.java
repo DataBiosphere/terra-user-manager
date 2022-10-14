@@ -64,6 +64,20 @@ class ProfileApiControllerTest extends BaseUnitTest {
     assertUserProfile("$.value.starred", null);
   }
 
+  @Test
+  void badPath() throws Exception {
+    setUserProfile("a", "{ \"value\": \"b\" }");
+    assertUserProfile("$.value.a", "b");
+
+    mockMvc
+        .perform(
+            put(API)
+                .param("path", "a.prop")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"value\": \"c\" }"))
+        .andExpect(status().isBadRequest());
+  }
+
   private void setUserProfile(String path, String value) throws Exception {
     mockMvc
         .perform(
