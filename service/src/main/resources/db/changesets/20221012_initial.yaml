@@ -20,3 +20,6 @@ databaseChangeLog:
                     nullable: false
                   defaultValue: "{}"
                   remarks: Schemaless object storing the profile data
+        -  sqlFile:
+            splitStatements:  false
+            path:  db/functions/pathfunc.sql

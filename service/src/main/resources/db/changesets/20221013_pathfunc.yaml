@@ -1,8 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: pathfunc
-      author: ishaghag
-      changes:
-        -  sqlFile:
-            splitStatements:  false
-            path:  db/functions/pathfunc.sql
