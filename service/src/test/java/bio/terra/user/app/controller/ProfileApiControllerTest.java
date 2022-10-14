@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import bio.terra.common.iam.SamUser;
 import bio.terra.user.testutils.BaseUnitTest;
+import bio.terra.user.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,7 @@ class ProfileApiControllerTest extends BaseUnitTest {
   @BeforeEach
   void beforeEach() {
     when(userFactory.from(any())).thenReturn(user);
-    var id = String.valueOf(Math.random()).substring(2);
-    when(user.getSubjectId()).thenReturn("fake-" + id);
+    when(user.getSubjectId()).thenReturn(TestUtils.appendRandomNumber("fake"));
   }
 
   @Test
