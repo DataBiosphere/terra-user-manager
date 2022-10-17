@@ -40,53 +40,27 @@ class ProfileApiControllerTest extends BaseUnitTest {
   }
 
   @Test
-  void recursiveSet() throws Exception {
+  void setProperty() throws Exception {
     setUserProfile("user.name.first", "{ \"value\": \"John\" }");
     assertUserProfile("$.value.user.name.first", "John");
   }
 
   @Test
-  void setSideBySide() throws Exception {
-    setUserProfile("settings.darkmode", "{ \"value\": true }");
-    setUserProfile("settings.language", "{ \"value\": \"en\" }");
+  void multiUser() throws Exception {
+    var user1 = TestUtils.appendRandomNumber("fake");
+    var user2 = TestUtils.appendRandomNumber("fake");
 
-    assertUserProfile("$.value.settings.darkmode", true);
-    assertUserProfile("$.value.settings.language", "en");
-  }
+    when(user.getSubjectId()).thenReturn(user1);
+    setUserProfile("name", "{ \"value\": \"John\" }");
+    assertUserProfile("$.value.name", "John");
 
-  @Test
-  void clobberSet() throws Exception {
-    setUserProfile("starred", "{ \"value\": [\"workspace1\", \"workspace2\"] }");
-    assertUserProfile("$.value.starred[0]", "workspace1");
-    assertUserProfile("$.value.starred[1]", "workspace2");
+    when(user.getSubjectId()).thenReturn(user2);
+    assertUserProfile("$.value", "");
+    setUserProfile("name", "{ \"value\": \"Mary\" }");
+    assertUserProfile("$.value.name", "Mary");
 
-    setUserProfile("starred", "{ \"value\": null }");
-    assertUserProfile("$.value.starred", null);
-  }
-
-  @Test
-  void badPath() throws Exception {
-    setUserProfile("a", "{ \"value\": \"b\" }");
-    assertUserProfile("$.value.a", "b");
-
-    mockMvc
-        .perform(
-            put(API)
-                .param("path", "a.prop")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"value\": \"c\" }"))
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  void setRoot() throws Exception {
-    mockMvc
-        .perform(
-            put(API)
-                .param("path", "")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"value\": 0 }"))
-        .andExpect(status().isUnauthorized());
+    when(user.getSubjectId()).thenReturn(user1);
+    assertUserProfile("$.value.name", "John");
   }
 
   private void setUserProfile(String path, String value) throws Exception {
