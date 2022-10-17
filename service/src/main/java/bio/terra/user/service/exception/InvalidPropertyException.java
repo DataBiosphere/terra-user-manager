@@ -1,8 +1,8 @@
 package bio.terra.user.service.exception;
 
-import bio.terra.common.exception.BadRequestException;
+import bio.terra.common.exception.UnauthorizedException;
 
-public class InvalidPropertyException extends BadRequestException {
+public class InvalidPropertyException extends UnauthorizedException {
   public InvalidPropertyException(String message) {
     super(message);
   }

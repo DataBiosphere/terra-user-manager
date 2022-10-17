@@ -78,6 +78,17 @@ class ProfileApiControllerTest extends BaseUnitTest {
         .andExpect(status().isBadRequest());
   }
 
+  @Test
+  void setRoot() throws Exception {
+    mockMvc
+        .perform(
+            put(API)
+                .param("path", "")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"value\": 0 }"))
+        .andExpect(status().isUnauthorized());
+  }
+
   private void setUserProfile(String path, String value) throws Exception {
     mockMvc
         .perform(

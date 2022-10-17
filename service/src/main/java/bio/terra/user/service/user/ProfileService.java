@@ -24,6 +24,10 @@ public class ProfileService {
   }
 
   public void setProperty(SamUser user, List<String> path, Object value) {
+    if (path.size() == 0) {
+      throw new InvalidPropertyException("Cannot overwrite the root object.");
+    }
+
     var userId = user.getSubjectId();
     var json = toJson(value);
 
