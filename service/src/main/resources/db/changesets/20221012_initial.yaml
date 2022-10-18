@@ -22,4 +22,5 @@ databaseChangeLog:
                   remarks: Schemaless object storing the profile data
         -  sqlFile:
             splitStatements:  false
-            path:  db/functions/pathfunc.sql
+            relativeToChangelogFile: true
+            path:  functions/pathfunc.sql

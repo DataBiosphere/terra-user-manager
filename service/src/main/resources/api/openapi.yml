@@ -40,7 +40,11 @@ paths:
     parameters:
       - $ref: '#/components/parameters/ProfilePath'
     get:
-      summary: Retrieve a profile property.
+      summary: |
+        Retrieve a profile property.
+
+        Leaving ProfilePath empty will return the entire profile object. Otherwise,
+        the path will be traversed and either return the found value or null.
       operationId: getUserProfile
       tags: [ Profile ]
       responses:
@@ -53,7 +57,11 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
     put:
-      summary: Set a profile property.
+      summary: |
+        Set a profile property.
+
+        ProfilePath must not be empty, as it is an error to attempt to overwrite the entire
+        profile object. On success, the value to set will be returned.
       operationId: setUserProfile
       tags: [ Profile ]
       requestBody:

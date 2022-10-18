@@ -30,13 +30,15 @@ public class ProfileService {
     }
 
     var userId = user.getSubjectId();
-    try {
-      var json = objectMapper.writeValueAsString(value);
 
-      profileDao.setProperty(userId, path, json);
+    String json;
+    try {
+      json = objectMapper.writeValueAsString(value);
     } catch (JsonProcessingException e) {
-      throw new MalformedPropertyException("Value to set must be valid JSON", e);
+      throw new MalformedPropertyException(
+          String.format("Value to set must be valid JSON: %s", value), e);
     }
+    profileDao.setProperty(userId, path, json);
   }
 
   public Object getProperty(SamUser user, List<String> path) {
@@ -48,7 +50,8 @@ public class ProfileService {
     try {
       return objectMapper.readValue(prop, JsonNode.class);
     } catch (JsonProcessingException e) {
-      throw new InternalServerErrorException("Failed to process property json", e);
+      throw new InternalServerErrorException(
+          String.format("Failed to process property json: %s", prop), e);
     }
   }
 }
