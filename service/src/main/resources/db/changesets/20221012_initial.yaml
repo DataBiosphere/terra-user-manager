@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: initial
+      author: ishaghag
+      changes:
+        - createTable:
+            tableName: user_profile
+            columns:
+              - column:
+                  name: user_id
+                  type: text
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: Sam user ID
+              - column:
+                  name: profile_obj
+                  type: jsonb
+                  constraints:
+                    nullable: false
+                  defaultValue: "{}"
+                  remarks: Schemaless object storing the profile data
+        -  sqlFile:
+            splitStatements:  false
+            relativeToChangelogFile: true
+            path:  functions/pathfunc.sql
