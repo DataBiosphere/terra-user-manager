@@ -8,6 +8,7 @@ import bio.terra.user.service.exception.MalformedPropertyException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.NullNode;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,7 @@ public class ProfileService {
     var userId = user.getSubjectId();
 
     var prop = profileDao.getProperty(userId, path);
-    if (prop == null) return null;
+    if (prop == null) return NullNode.getInstance();
 
     try {
       return objectMapper.readValue(prop, JsonNode.class);
