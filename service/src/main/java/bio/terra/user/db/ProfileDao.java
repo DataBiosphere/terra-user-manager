@@ -42,7 +42,7 @@ public class ProfileDao {
     final String sql =
         """
         UPDATE user_profile
-        SET profile_obj = pathRecurse(profile_obj, :path::text[], :value::jsonb)
+        SET profile_obj = jsonb_strip_nulls(pathRecurse(profile_obj, :path::text[], :value::jsonb))
         WHERE user_id = :user_id
         """;
 

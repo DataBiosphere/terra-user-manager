@@ -49,7 +49,7 @@ public class ProfileDaoTest extends BaseUnitTest {
     assertEquals(workspaces, profileDao.getProperty(userId, path));
 
     profileDao.setProperty(userId, path, "null");
-    assertEquals("null", profileDao.getProperty(userId, path));
+    assertEquals(null, profileDao.getProperty(userId, path));
   }
 
   @Test
