@@ -64,11 +64,6 @@ public class ProfileDao {
   @ReadTransaction
   @Nullable
   public String getProperty(String userId, List<String> path) {
-    return getPropertySingle(userId, path);
-  }
-
-  @Nullable
-  private String getPropertySingle(String userId, List<String> path) {
     final String sql =
         """
         SELECT profile_obj #> :path::text[] AS value
@@ -89,6 +84,10 @@ public class ProfileDao {
             return rs.getString("value");
           });
     } catch (EmptyResultDataAccessException e) {
+      // If the row for the user doesn't exist yet, we try and
+      // keep the behaviour consistent to the client by pretending
+      // the profile object is empty and/or the specific path requested
+      // does not exist.
       return CollectionUtils.isEmpty(path) ? "{}" : null;
     }
   }
