@@ -4,6 +4,7 @@ import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
 import bio.terra.user.db.exception.BadPathException;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -61,10 +62,12 @@ public class ProfileDao {
   }
 
   @ReadTransaction
+  @Nullable
   public String getProperty(String userId, List<String> path) {
     return getPropertySingle(userId, path);
   }
 
+  @Nullable
   private String getPropertySingle(String userId, List<String> path) {
     final String sql =
         """
