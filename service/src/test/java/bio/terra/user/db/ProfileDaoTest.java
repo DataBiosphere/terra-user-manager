@@ -16,7 +16,15 @@ public class ProfileDaoTest extends BaseUnitTest {
   @Test
   void getEmptyProfile() throws Exception {
     var userId = TestUtils.appendRandomNumber("fake");
-    assertEquals(profileDao.getProperty(userId, List.of()), "{}");
+    assertEquals("{}", profileDao.getProperty(userId, List.of()));
+    assertEquals(null, profileDao.getProperty(userId, List.of("fake")));
+  }
+
+  @Test
+  void nonEmptyProfileNovalue() throws Exception {
+    var userId = TestUtils.appendRandomNumber("fake");
+    profileDao.setProperty(userId, List.of("user"), "\"v\"");
+    assertEquals(null, profileDao.getProperty(userId, List.of("fake")));
   }
 
   @Test
