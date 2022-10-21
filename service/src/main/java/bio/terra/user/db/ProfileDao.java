@@ -4,12 +4,14 @@ import bio.terra.common.db.ReadTransaction;
 import bio.terra.common.db.WriteTransaction;
 import bio.terra.user.db.exception.BadPathException;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 @Component
 public class ProfileDao {
@@ -41,7 +43,7 @@ public class ProfileDao {
     final String sql =
         """
         UPDATE user_profile
-        SET profile_obj = pathRecurse(profile_obj, :path::text[], :value::jsonb)
+        SET profile_obj = jsonb_strip_nulls(pathRecurse(profile_obj, :path::text[], :value::jsonb))
         WHERE user_id = :user_id
         """;
 
@@ -60,11 +62,8 @@ public class ProfileDao {
   }
 
   @ReadTransaction
+  @Nullable
   public String getProperty(String userId, List<String> path) {
-    return getPropertySingle(userId, path);
-  }
-
-  private String getPropertySingle(String userId, List<String> path) {
     final String sql =
         """
         SELECT profile_obj #> :path::text[] AS value
@@ -85,7 +84,11 @@ public class ProfileDao {
             return rs.getString("value");
           });
     } catch (EmptyResultDataAccessException e) {
-      return "{}";
+      // If the row for the user doesn't exist yet, we try and
+      // keep the behaviour consistent to the client by pretending
+      // the profile object is empty and/or the specific path requested
+      // does not exist.
+      return CollectionUtils.isEmpty(path) ? "{}" : null;
     }
   }
 

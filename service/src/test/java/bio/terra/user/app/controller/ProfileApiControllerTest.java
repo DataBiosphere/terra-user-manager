@@ -37,12 +37,20 @@ class ProfileApiControllerTest extends BaseUnitTest {
   @Test
   void getEmptyProfile() throws Exception {
     assertUserProfile("$.value", "");
+    assertUserProfile("fake", "$.value", null);
   }
 
   @Test
   void setProperty() throws Exception {
     setUserProfile("user.name.first", "{ \"value\": \"John\" }");
     assertUserProfile("$.value.user.name.first", "John");
+  }
+
+  @Test
+  void nonEmptyProfileNoValue() throws Exception {
+    // row for the user now exists
+    setUserProfile("user", "{ \"value\": \"v\" }");
+    assertUserProfile("fake", "$.value", null);
   }
 
   @Test
@@ -71,8 +79,12 @@ class ProfileApiControllerTest extends BaseUnitTest {
   }
 
   private void assertUserProfile(String jsonPath, Object value) throws Exception {
+    assertUserProfile(null, jsonPath, value);
+  }
+
+  private void assertUserProfile(String apiPath, String jsonPath, Object value) throws Exception {
     mockMvc
-        .perform(get(API))
+        .perform(get(API).param("path", apiPath))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath(jsonPath).value(value));
