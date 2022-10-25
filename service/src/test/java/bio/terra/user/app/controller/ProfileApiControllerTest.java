@@ -9,7 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import bio.terra.common.exception.ForbiddenException;
 import bio.terra.common.iam.SamUser;
+import bio.terra.user.service.iam.SamService;
 import bio.terra.user.testutils.BaseUnitTest;
 import bio.terra.user.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,8 @@ class ProfileApiControllerTest extends BaseUnitTest {
   @Autowired private MockMvc mockMvc;
 
   @MockBean private ProfileSamUserFactory userFactory;
+
+  @MockBean private SamService samService;
 
   private final SamUser user = mock(SamUser.class);
 
@@ -71,10 +75,44 @@ class ProfileApiControllerTest extends BaseUnitTest {
     assertUserProfile("$.value.name", "John");
   }
 
-  private void setUserProfile(String path, String value) throws Exception {
+  @Test
+  void adminNoPermission() throws Exception {
+    when(samService.adminEmailToId(any(), any())).thenThrow(new ForbiddenException(""));
     mockMvc
         .perform(
-            put(API).param("path", path).contentType(MediaType.APPLICATION_JSON).content(value))
+            put(API)
+                .param("path", "any")
+                .param("userEmail", "user.name@gmail.com")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{ \"value\": \"any\" }"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
+  void adminSet() throws Exception {
+    var user1 = TestUtils.appendRandomNumber("fake");
+    var user2 = TestUtils.appendRandomNumber("fake");
+
+    when(user.getSubjectId()).thenReturn(user1);
+    when(samService.adminEmailToId(any(), any())).thenReturn(user2);
+    setUserProfile("name", "{ \"value\": \"John\" }", "user2@gmail.com");
+
+    when(user.getSubjectId()).thenReturn(user2);
+    assertUserProfile("$.value.name", "John");
+  }
+
+  private void setUserProfile(String path, String value) throws Exception {
+    setUserProfile(path, value, null);
+  }
+
+  private void setUserProfile(String path, String value, String userEmail) throws Exception {
+    mockMvc
+        .perform(
+            put(API)
+                .param("path", path)
+                .param("userEmail", userEmail)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(value))
         .andExpect(status().isOk());
   }
 
