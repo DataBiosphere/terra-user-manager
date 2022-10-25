@@ -39,12 +39,15 @@ paths:
   /api/profile:
     parameters:
       - $ref: '#/components/parameters/ProfilePath'
+      - $ref: '#/components/parameters/UserEmail'
     get:
       summary: |
         Retrieve a profile property.
 
         Leaving ProfilePath empty will return the entire profile object. Otherwise,
         the path will be traversed and either return the found value or null.
+
+        Supplying an email will target that user's profile (requires Admin).
       operationId: getUserProfile
       tags: [ Profile ]
       responses:
@@ -62,6 +65,8 @@ paths:
 
         ProfilePath must not be empty, as it is an error to attempt to overwrite the entire
         profile object. On success, the value to set will be returned.
+
+        Supplying an email will target that user's profile (requires Admin).
       operationId: setUserProfile
       tags: [ Profile ]
       requestBody:
@@ -131,6 +136,13 @@ components:
       explode: false
       schema:
         $ref: '#/components/schemas/LookupPath'
+
+    UserEmail:
+      name: userEmail
+      in: query
+      description: Target a specific user by their email address.
+      schema:
+        type: string
 
   responses:
     # Keep alphabetized please
