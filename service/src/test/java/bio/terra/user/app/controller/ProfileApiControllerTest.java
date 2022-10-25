@@ -1,7 +1,6 @@
 package bio.terra.user.app.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -16,6 +15,7 @@ import bio.terra.user.testutils.BaseUnitTest;
 import bio.terra.user.testutils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -30,7 +30,7 @@ class ProfileApiControllerTest extends BaseUnitTest {
 
   @MockBean private SamService samService;
 
-  private final SamUser user = mock(SamUser.class);
+  @Mock private SamUser user;
 
   @BeforeEach
   void beforeEach() {
@@ -77,7 +77,7 @@ class ProfileApiControllerTest extends BaseUnitTest {
 
   @Test
   void adminNoPermission() throws Exception {
-    when(samService.adminEmailToId(any(), any())).thenThrow(new ForbiddenException(""));
+    when(samService.adminGetUserIdByEmail(any(), any())).thenThrow(new ForbiddenException(""));
     mockMvc
         .perform(
             put(API)
@@ -94,7 +94,7 @@ class ProfileApiControllerTest extends BaseUnitTest {
     var user2 = TestUtils.appendRandomNumber("fake");
 
     when(user.getSubjectId()).thenReturn(user1);
-    when(samService.adminEmailToId(any(), any())).thenReturn(user2);
+    when(samService.adminGetUserIdByEmail(any(), any())).thenReturn(user2);
     setUserProfile("name", "{ \"value\": \"John\" }", "user2@gmail.com");
 
     when(user.getSubjectId()).thenReturn(user2);

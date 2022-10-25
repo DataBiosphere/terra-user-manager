@@ -8,6 +8,7 @@ import bio.terra.user.service.iam.SamService;
 import bio.terra.user.service.user.ProfileService;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,14 +37,16 @@ public class ProfileApiController implements ProfileApi {
   }
 
   @Override
-  public ResponseEntity<AnyObject> setUserProfile(AnyObject body, String path, String userEmail) {
+  public ResponseEntity<AnyObject> setUserProfile(
+      AnyObject body, @Nullable String path, @Nullable String userEmail) {
     profileService.setProperty(targetIdOrSelf(userEmail), parsePath(path), body.getValue());
 
     return getUserProfile(path, userEmail);
   }
 
   @Override
-  public ResponseEntity<AnyObject> getUserProfile(String path, String userEmail) {
+  public ResponseEntity<AnyObject> getUserProfile(
+      @Nullable String path, @Nullable String userEmail) {
     AnyObject apiObj =
         new AnyObject()
             .value(profileService.getProperty(targetIdOrSelf(userEmail), parsePath(path)));
@@ -55,8 +58,8 @@ public class ProfileApiController implements ProfileApi {
     return StringUtils.isEmpty(userEmail)
         ? getUser().getSubjectId()
         : SamRethrow.onInterrupted(
-            () -> samService.adminEmailToId(getUser().getBearerToken(), userEmail),
-            "Admin user Id from email");
+            () -> samService.adminGetUserIdByEmail(getUser().getBearerToken(), userEmail),
+            "If user is admin, get the targeted user id from email");
   }
 
   private SamUser getUser() {

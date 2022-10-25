@@ -7,7 +7,6 @@ import bio.terra.user.app.configuration.SamConfiguration;
 import org.broadinstitute.dsde.workbench.client.sam.ApiClient;
 import org.broadinstitute.dsde.workbench.client.sam.ApiException;
 import org.broadinstitute.dsde.workbench.client.sam.api.AdminApi;
-import org.broadinstitute.dsde.workbench.client.sam.api.UsersApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,15 +29,12 @@ public class SamService {
     return new ApiClient().setBasePath(samConfig.basePath());
   }
 
-  public UsersApi samUsersApi(String accessToken) {
-    return new UsersApi(getApiClient(accessToken));
-  }
-
   public AdminApi samAdminApi(String accessToken) {
     return new AdminApi(getApiClient(accessToken));
   }
 
-  public String adminEmailToId(BearerToken userRequest, String email) throws InterruptedException {
+  public String adminGetUserIdByEmail(BearerToken userRequest, String email)
+      throws InterruptedException {
     try {
       return SamRetry.retry(
           () ->

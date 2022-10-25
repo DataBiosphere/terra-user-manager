@@ -48,6 +48,7 @@ paths:
         the path will be traversed and either return the found value or null.
 
         Supplying an email will target that user's profile (requires Admin).
+        If left blank, it will target the current user.
       operationId: getUserProfile
       tags: [ Profile ]
       responses:
@@ -67,6 +68,7 @@ paths:
         profile object. On success, the value to set will be returned.
 
         Supplying an email will target that user's profile (requires Admin).
+        If left blank, it will target the current user.
       operationId: setUserProfile
       tags: [ Profile ]
       requestBody:
@@ -140,6 +142,7 @@ components:
     UserEmail:
       name: userEmail
       in: query
+      required: false
       description: Target a specific user by their email address.
       schema:
         type: string
