@@ -39,7 +39,8 @@ public class ProfileApiController implements ProfileApi {
   @Override
   public ResponseEntity<AnyObject> setUserProfile(
       AnyObject body, @Nullable String path, @Nullable String userEmail) {
-    profileService.setProperty(targetIdOrSelf(userEmail), parsePath(path), body.getValue());
+    String profileUser = getProfileUser(userEmail);
+    profileService.setProperty(profileUser, parsePath(path), body.getValue());
 
     return getUserProfile(path, userEmail);
   }
@@ -47,14 +48,14 @@ public class ProfileApiController implements ProfileApi {
   @Override
   public ResponseEntity<AnyObject> getUserProfile(
       @Nullable String path, @Nullable String userEmail) {
+    String profileUser = getProfileUser(userEmail);
     AnyObject apiObj =
-        new AnyObject()
-            .value(profileService.getProperty(targetIdOrSelf(userEmail), parsePath(path)));
+        new AnyObject().value(profileService.getProperty(profileUser, parsePath(path)));
 
     return new ResponseEntity<>(apiObj, HttpStatus.OK);
   }
 
-  private String targetIdOrSelf(String userEmail) {
+  private String getProfileUser(String userEmail) {
     return StringUtils.isEmpty(userEmail)
         ? getUser().getSubjectId()
         : SamRethrow.onInterrupted(

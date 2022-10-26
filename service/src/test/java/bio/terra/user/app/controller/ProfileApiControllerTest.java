@@ -13,6 +13,7 @@ import bio.terra.common.iam.SamUser;
 import bio.terra.user.service.iam.SamService;
 import bio.terra.user.testutils.BaseUnitTest;
 import bio.terra.user.testutils.TestUtils;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -39,19 +40,19 @@ class ProfileApiControllerTest extends BaseUnitTest {
   }
 
   @Test
-  void getEmptyProfile() throws Exception {
+  void getUserProfile_emptyProfile() throws Exception {
     assertUserProfile("$.value", "");
     assertUserProfile("fake", "$.value", null);
   }
 
   @Test
-  void setProperty() throws Exception {
+  void setUserProfile_canSetProperty() throws Exception {
     setUserProfile("user.name.first", "{ \"value\": \"John\" }");
     assertUserProfile("$.value.user.name.first", "John");
   }
 
   @Test
-  void nonEmptyProfileNoValue() throws Exception {
+  void getUserProfile_noValue() throws Exception {
     // row for the user now exists
     setUserProfile("user", "{ \"value\": \"v\" }");
     assertUserProfile("fake", "$.value", null);
@@ -76,20 +77,13 @@ class ProfileApiControllerTest extends BaseUnitTest {
   }
 
   @Test
-  void adminNoPermission() throws Exception {
+  void getUserProfile_requestEmailSet_requesterNotAdmin_throws403() throws Exception {
     when(samService.adminGetUserIdByEmail(any(), any())).thenThrow(new ForbiddenException(""));
-    mockMvc
-        .perform(
-            put(API)
-                .param("path", "any")
-                .param("userEmail", "user.name@gmail.com")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{ \"value\": \"any\" }"))
-        .andExpect(status().isForbidden());
+    setUserProfile("any", "{ \"value\": \"any\" }", "user.name@gmail.com", HttpStatus.SC_FORBIDDEN);
   }
 
   @Test
-  void adminSet() throws Exception {
+  void setUserProfile_requestEmailSet_requesterIsAdmin() throws Exception {
     var user1 = TestUtils.appendRandomNumber("fake");
     var user2 = TestUtils.appendRandomNumber("fake");
 
@@ -106,6 +100,11 @@ class ProfileApiControllerTest extends BaseUnitTest {
   }
 
   private void setUserProfile(String path, String value, String userEmail) throws Exception {
+    setUserProfile(path, value, userEmail, HttpStatus.SC_OK);
+  }
+
+  private void setUserProfile(String path, String value, String userEmail, int status)
+      throws Exception {
     mockMvc
         .perform(
             put(API)
@@ -113,7 +112,7 @@ class ProfileApiControllerTest extends BaseUnitTest {
                 .param("userEmail", userEmail)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(value))
-        .andExpect(status().isOk());
+        .andExpect(status().is(status));
   }
 
   private void assertUserProfile(String jsonPath, Object value) throws Exception {

@@ -43,7 +43,7 @@ public class SamService {
                   .getUserInfo()
                   .getUserSubjectId());
     } catch (ApiException apiException) {
-      throw new ForbiddenException("Terra Admin access is required for this action.");
+      throw new ForbiddenException("Must be SAM admin to read or write another user's profile");
     }
   }
 }
