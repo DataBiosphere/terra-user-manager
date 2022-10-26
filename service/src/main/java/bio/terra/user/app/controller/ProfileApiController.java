@@ -61,6 +61,7 @@ public class ProfileApiController implements ProfileApi {
     return new ResponseEntity<>(apiObj, HttpStatus.OK);
   }
 
+  /** Gets user id to perform profile action on. */
   private String getProfileUser(String userEmail) {
     return StringUtils.isEmpty(userEmail)
         ? getUser().getSubjectId()
