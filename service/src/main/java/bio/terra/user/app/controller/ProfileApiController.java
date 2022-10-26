@@ -39,6 +39,9 @@ public class ProfileApiController implements ProfileApi {
   @Override
   public ResponseEntity<AnyObject> setUserProfile(
       AnyObject body, @Nullable String path, @Nullable String userEmail) {
+    if (!StringUtils.isEmpty(userEmail)) {
+      checkRequesterIsSamAdmin();
+    }
     String profileUser = getProfileUser(userEmail);
     profileService.setProperty(profileUser, parsePath(path), body.getValue());
 
@@ -48,6 +51,9 @@ public class ProfileApiController implements ProfileApi {
   @Override
   public ResponseEntity<AnyObject> getUserProfile(
       @Nullable String path, @Nullable String userEmail) {
+    if (!StringUtils.isEmpty(userEmail)) {
+      checkRequesterIsSamAdmin();
+    }
     String profileUser = getProfileUser(userEmail);
     AnyObject apiObj =
         new AnyObject().value(profileService.getProperty(profileUser, parsePath(path)));
@@ -61,6 +67,15 @@ public class ProfileApiController implements ProfileApi {
         : SamRethrow.onInterrupted(
             () -> samService.adminGetUserIdByEmail(getUser().getBearerToken(), userEmail),
             "If user is admin, get the targeted user id from email");
+  }
+
+  private void checkRequesterIsSamAdmin() {
+    SamRethrow.onInterrupted(
+        () -> {
+          final String requesterEmail = samService.getUserEmailFromSam(getUser().getBearerToken());
+          samService.adminGetUserIdByEmail(getUser().getBearerToken(), requesterEmail);
+        },
+        "check whether the user has admin access");
   }
 
   private SamUser getUser() {
