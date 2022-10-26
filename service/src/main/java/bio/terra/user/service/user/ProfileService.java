@@ -1,7 +1,6 @@
 package bio.terra.user.service.user;
 
 import bio.terra.common.exception.InternalServerErrorException;
-import bio.terra.common.iam.SamUser;
 import bio.terra.user.db.ProfileDao;
 import bio.terra.user.service.exception.InvalidPropertyException;
 import bio.terra.user.service.exception.MalformedPropertyException;
@@ -25,12 +24,10 @@ public class ProfileService {
     this.objectMapper = objectMapper;
   }
 
-  public void setProperty(SamUser user, List<String> path, Object value) {
+  public void setProperty(String userId, List<String> path, Object value) {
     if (path.size() == 0) {
       throw new InvalidPropertyException("Cannot overwrite the root object.");
     }
-
-    var userId = user.getSubjectId();
 
     String json;
     try {
@@ -42,9 +39,7 @@ public class ProfileService {
     profileDao.setProperty(userId, path, json);
   }
 
-  public Object getProperty(SamUser user, List<String> path) {
-    var userId = user.getSubjectId();
-
+  public Object getProperty(String userId, List<String> path) {
     var prop = profileDao.getProperty(userId, path);
     if (prop == null) return NullNode.getInstance();
 

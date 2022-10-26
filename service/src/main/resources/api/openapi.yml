@@ -39,12 +39,16 @@ paths:
   /api/profile:
     parameters:
       - $ref: '#/components/parameters/ProfilePath'
+      - $ref: '#/components/parameters/UserEmail'
     get:
       summary: |
         Retrieve a profile property.
 
         Leaving ProfilePath empty will return the entire profile object. Otherwise,
         the path will be traversed and either return the found value or null.
+
+        If userEmail is set, requester must be SAM admin, and userEmail's profile is returned.
+        Otherwise, requester's profile is returned.
       operationId: getUserProfile
       tags: [ Profile ]
       responses:
@@ -62,6 +66,9 @@ paths:
 
         ProfilePath must not be empty, as it is an error to attempt to overwrite the entire
         profile object. On success, the value to set will be returned.
+
+        If userEmail is set, requester must be SAM admin, and userEmail's profile is modified.
+        Otherwise, requester's profile is modified.
       operationId: setUserProfile
       tags: [ Profile ]
       requestBody:
@@ -131,6 +138,14 @@ components:
       explode: false
       schema:
         $ref: '#/components/schemas/LookupPath'
+
+    UserEmail:
+      name: userEmail
+      in: query
+      required: false
+      description: Target a specific user by their email address.
+      schema:
+        type: string
 
   responses:
     # Keep alphabetized please

@@ -28,6 +28,7 @@ public class ProfileServiceTest extends BaseUnitTest {
   @Test
   void setRoot() throws Exception {
     assertThrows(
-        InvalidPropertyException.class, () -> profileService.setProperty(user, List.of(), null));
+        InvalidPropertyException.class,
+        () -> profileService.setProperty(user.getSubjectId(), List.of(), null));
   }
 }
