@@ -70,4 +70,12 @@ public class ProfileDaoTest extends BaseUnitTest {
         BadPathException.class,
         () -> profileDao.setProperty(userId, List.of("a", "prop"), "\"c\""));
   }
+
+  @Test
+  void setProperty_RejectsGiantObject() throws Exception {
+    var userId = TestUtils.appendRandomNumber("fake");
+    assertThrows(
+        BadPathException.class,
+        () -> profileDao.setProperty(userId, List.of("a"), "\"" + "a".repeat(50_000_000) + "\""));
+  }
 }
