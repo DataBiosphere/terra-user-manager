@@ -23,4 +23,4 @@ databaseChangeLog:
         -  sqlFile:
             splitStatements:  false
             relativeToChangelogFile: true
-            path: functions/pathfunc.sql
+            path:  functions/pathfunc.sql
