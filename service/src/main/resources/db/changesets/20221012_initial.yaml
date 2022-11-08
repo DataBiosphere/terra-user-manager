@@ -20,13 +20,7 @@ databaseChangeLog:
                     nullable: false
                   defaultValue: "{}"
                   remarks: Schemaless object storing the profile data
-        - sqlFile:
-            splitStatements: false
+        -  sqlFile:
+            splitStatements:  false
             relativeToChangelogFile: true
             path: functions/pathfunc.sql
-        - sql:
-            # 32MB Upper bound per (potentially compressed) profile object.
-            #
-            # liquibase has checkConstraint in its column definition, but it
-            # doesn't seem to do anything.
-            sql: ALTER TABLE user_profile ADD CONSTRAINT max_profile_size CHECK (pg_column_size(profile_obj) < 33554432);

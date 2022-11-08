@@ -72,7 +72,7 @@ public class ProfileDaoTest extends BaseUnitTest {
   }
 
   @Test
-  void setProperty_RejectsGiantObject() throws Exception {
+  void setProperty_rejectsGiantObject() throws Exception {
     var userId = TestUtils.appendRandomNumber("fake");
     assertThrows(
         BadPathException.class,

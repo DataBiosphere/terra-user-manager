@@ -33,7 +33,12 @@ public class ProfileService {
 
     if (path.size() > MAX_PATH_LENGTH) {
       throw new BadPathException(
-          "Path with length: " + path.size() + " violates max path length of: " + MAX_PATH_LENGTH);
+          "Path: "
+              + path.subList(0, MAX_PATH_LENGTH)
+              + "... with length: "
+              + path.size()
+              + " violates max path length of: "
+              + MAX_PATH_LENGTH);
     }
 
     String json;

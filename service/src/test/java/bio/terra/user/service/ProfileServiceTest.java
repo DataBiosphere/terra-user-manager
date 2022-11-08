@@ -35,7 +35,7 @@ public class ProfileServiceTest extends BaseUnitTest {
   }
 
   @Test
-  void setProperty_RejectsLongPath() throws Exception {
+  void setProperty_rejectsLongPath() throws Exception {
     assertThrows(
         BadPathException.class,
         () -> profileService.setProperty(user.getSubjectId(), Collections.nCopies(33, "a"), null));
