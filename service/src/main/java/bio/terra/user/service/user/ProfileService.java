@@ -2,6 +2,7 @@ package bio.terra.user.service.user;
 
 import bio.terra.common.exception.InternalServerErrorException;
 import bio.terra.user.db.ProfileDao;
+import bio.terra.user.db.exception.BadPathException;
 import bio.terra.user.service.exception.InvalidPropertyException;
 import bio.terra.user.service.exception.MalformedPropertyException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProfileService {
+  private static final int MAX_PATH_LENGTH = 32;
 
   private final ProfileDao profileDao;
   private final ObjectMapper objectMapper;
@@ -27,6 +29,16 @@ public class ProfileService {
   public void setProperty(String userId, List<String> path, Object value) {
     if (path.size() == 0) {
       throw new InvalidPropertyException("Cannot overwrite the root object.");
+    }
+
+    if (path.size() > MAX_PATH_LENGTH) {
+      throw new BadPathException(
+          "Path: "
+              + path.subList(0, MAX_PATH_LENGTH)
+              + "... with length: "
+              + path.size()
+              + " violates max path length of: "
+              + MAX_PATH_LENGTH);
     }
 
     String json;

@@ -4,4 +4,5 @@
   <property name="uuid_function" value="gen_random_uuid()" dbms="postgresql"/>
 
   <include file="changesets/20221012_initial.yaml" relativeToChangelogFile="true"/>
+  <include file="changesets/20221108_sets_max_profile_size.yaml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
