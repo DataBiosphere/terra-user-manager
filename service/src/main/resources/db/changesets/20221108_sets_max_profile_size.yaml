@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: limits
+      id: sets_max_profile_size
       author: ishaghag
       changes:
         - sql:
