@@ -42,12 +42,6 @@ repositories {
 }
 
 dependencies {
-    constraints {
-        implementation 'com.google.guava:guava:31.1-jre' // "-jre" for Java 8 or higher
-        implementation 'org.checkerframework:checker-qual:3.21.3'
-        implementation 'org.ow2.asm:asm:9.3'
-    }
-
     compileOnly "com.google.code.findbugs:annotations:3.0.1"
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'
     swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.31'
