@@ -47,7 +47,6 @@ dependencies {
         implementation 'org.checkerframework:checker-qual:3.21.3'
         implementation 'org.ow2.asm:asm:9.3'
     }
-    implementation platform('com.google.cloud:libraries-bom:25.1.0')
 
     compileOnly "com.google.code.findbugs:annotations:3.0.1"
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.0'

@@ -13,6 +13,7 @@ apply from: 'generators.gradle'
 apply from: 'publishing.gradle'
 
 dependencies {
+    implementation platform('com.google.cloud:libraries-bom:25.1.0')
     implementation 'bio.terra:terra-common-lib'
     implementation 'org.apache.commons:commons-dbcp2'
     implementation 'org.apache.commons:commons-lang3'

@@ -16,3 +16,5 @@ dependencyManagement {
 
 apply from: 'artifactory.gradle'
 apply from: 'swagger.gradle'
+
+apply from: "$rootDir/gradle/dependency-locking.gradle"
