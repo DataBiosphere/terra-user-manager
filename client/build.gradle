@@ -8,11 +8,7 @@ plugins {
     id 'org.hidetake.swagger.generator'
 }
 
-dependencyManagement {
-    imports {
-        mavenBom(SpringBootPlugin.BOM_COORDINATES)
-    }
-}
+repositories { mavenCentral() }
 
 apply from: 'artifactory.gradle'
 apply from: 'swagger.gradle'
