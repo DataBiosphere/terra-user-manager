@@ -1,8 +1,6 @@
 name: Bump, Tag, Publish
 
 on:
-  pull_request:
-    branches: [ '**' ]
   push:
     branches:
     - main
