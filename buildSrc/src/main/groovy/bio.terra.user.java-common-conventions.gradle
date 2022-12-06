@@ -51,10 +51,6 @@ dependencies {
     testImplementation 'ch.qos.logback:logback-classic:1.2.11'
     testImplementation 'org.hamcrest:hamcrest:2.2'
 
-    implementation('bio.terra:terra-common-lib:0.0.75-SNAPSHOT') {
-        exclude group: 'org.broadinstitute.dsde.workbench', module: 'sam-client_2.12'
-    }
-
     configurations.all {
         exclude group: 'org.bouncycastle', module: 'bcpkix-jdk18on'
     }

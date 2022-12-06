@@ -14,7 +14,9 @@ apply from: 'publishing.gradle'
 
 dependencies {
     implementation platform('com.google.cloud:libraries-bom:25.1.0')
-    implementation 'bio.terra:terra-common-lib'
+    implementation('bio.terra:terra-common-lib:0.0.75-SNAPSHOT') {
+        exclude group: 'org.broadinstitute.dsde.workbench', module: 'sam-client_2.12'
+    }
     implementation group: 'org.broadinstitute.dsde.workbench', name: 'sam-client_2.13', version: '0.1-ffb0a89-SNAP'
 
     implementation 'org.apache.commons:commons-dbcp2'
