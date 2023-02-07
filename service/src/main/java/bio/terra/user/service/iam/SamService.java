@@ -1,6 +1,5 @@
 package bio.terra.user.service.iam;
 
-import bio.terra.common.exception.ForbiddenException;
 import bio.terra.common.iam.BearerToken;
 import bio.terra.common.sam.SamRetry;
 import bio.terra.common.sam.exception.SamExceptionFactory;
@@ -63,7 +62,8 @@ public class SamService {
                   .getUserInfo()
                   .getUserSubjectId());
     } catch (ApiException apiException) {
-      throw new ForbiddenException("Must be SAM admin to read or write another user's profile");
+      throw SamExceptionFactory.create(
+          String.format("Failed to get user id for email %s", email), apiException);
     }
   }
 }
