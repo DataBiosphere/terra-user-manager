@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import bio.terra.common.exception.ForbiddenException;
 import bio.terra.common.iam.SamUser;
+import bio.terra.common.sam.exception.SamNotFoundException;
 import bio.terra.user.service.iam.SamService;
 import bio.terra.user.testutils.BaseUnitTest;
 import bio.terra.user.testutils.TestUtils;
@@ -80,6 +81,12 @@ class ProfileApiControllerTest extends BaseUnitTest {
   void getUserProfile_requestEmailSet_requesterNotAdmin_throws403() throws Exception {
     when(samService.adminGetUserIdByEmail(any(), any())).thenThrow(new ForbiddenException(""));
     setUserProfile("any", "{ \"value\": \"any\" }", "user.name@gmail.com", HttpStatus.SC_FORBIDDEN);
+  }
+
+  @Test
+  void getUserProfile_requestEmailSet_emailNotFound_throws404() throws Exception {
+    when(samService.adminGetUserIdByEmail(any(), any())).thenThrow(new SamNotFoundException(""));
+    setUserProfile("any", "{ \"value\": \"any\" }", "user.name@gmail.com", HttpStatus.SC_NOT_FOUND);
   }
 
   @Test
