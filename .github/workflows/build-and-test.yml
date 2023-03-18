@@ -85,4 +85,4 @@ jobs:
     - name: Get current date
       id: date
       if: failure() && contains(github.actor, 'verily-automation-bot')
-      run: echo "::set-output name=date::$(TZ=America/New_York date +"%-m/%-d")"
+      run: echo date=$(TZ=America/New_York date +"%-m/%-d") >> $GITHUB_OUTPUT
